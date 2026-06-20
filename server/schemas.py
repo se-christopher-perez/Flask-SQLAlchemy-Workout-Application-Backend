@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, validates, ValidationError
 
 from models import Excercise, Workout, WorkoutExercise
 
@@ -8,6 +8,18 @@ class ExcerciseSchema(Schema):
     name = fields.Str(required = True)
     category = fields.Str(required = True)
     equipment_needed = fields.Bool(load_default = False)
+
+    @validates('name')
+    def validate_name(self, value):
+        if not value or value.strip() == '':
+            raise ValidationError("Name can't be empty or blank")
+        
+    @ validates('category')
+    def validate_category(self, value):
+        categories = ['Strength', 'Cardio', 'Flexibility', 'Balance']
+
+        if value not in categories:
+            raise ValidationError(f"Acceptable Categories: {', '.join(categories)}.")
 
 class WorkoutExerciseSchema(Schema):
 
