@@ -32,12 +32,12 @@ class WorkoutExerciseSchema(Schema):
     exercise = fields.Nested(lambda: ExerciseSchema(only = ('id', 'name', 'category')), dump_only = True)
 
 class WorkoutSchema(Schema):
-    id = fields.Int(dump_only = True)
-    date = fields.Date(required = True)
-    duration_min = fields.Int(required = True)
-    notes = fields.Str(load_default = None)
+    
+    id = fields.Int(dump_only=True)
+    date = fields.Date(required=True)
+    duration_min = fields.Int(required=True)
+    notes = fields.Str(load_default=None)
     workout_exercises = fields.List(fields.Nested(WorkoutExerciseSchema), dump_only=True)
-    exercises = fields.List(fields.Nested(ExerciseSchema(only = ('id', 'name', 'category'))), dump_only = True)
 
 exercise_schema = ExerciseSchema()
 exercises_schema = ExerciseSchema(many=True)
