@@ -16,6 +16,12 @@ class Exercise(db.Model):
     workout_exercises = db.relationship('WorkoutExercise', back_populates = 'exercise', cascade = 'all, delete-orphan')
     workouts = db.relationship('Workout', secondary = 'workout_exercises', back_populates = 'exercises')
 
+    @validates('name')
+    def validate_name(self, key, name):
+        if not name:
+            raise ValueError('Name cannot be empty')
+        
+        return name
 
     def __repr__(self):
         return f"<Exercise id={self.id} name={self.name}>"
@@ -31,6 +37,13 @@ class Workout(db.Model):
 
     workout_exercises = db.relationship('WorkoutExercise', back_populates='workout', cascade='all, delete-orphan')
     exercises = db.relationship('Exercise', secondary='workout_exercises', back_populates='workouts')
+
+    @validates('duration_min')
+    def validate_duration_min(self, key, duration):
+        if duration is None or duration <= 0:
+            raise ValueError('Duration must be greater than 0.')
+        
+        return duration
 
     def __repr__(self):
         return f"<Workout id={self.id} date={self.date} duration={self.duration_min}>"
